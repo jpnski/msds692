@@ -4,7 +4,7 @@
 
 ## Goal
 
-The goal of this homework is to learn a core technique used in text analysis called *TFIDF* or *term frequency, inverse document frequency*.  We will use what is called a *bag-of-words* representation where the order of words in a document don't matter--we care only about the words and how often they occur. A word's TFIDF value is often used as a feature for document clustering or classification. The more a term helps to distinguish its enclosing document from other documents, the higher its TFIDF score. As such, words with high TFIDF scores are often very good summarizing keywords for document.
+The goal of this homework is to learn a core technique used in text analysis called *TFIDF* or *term frequency, inverse document frequency*.  We will use what is called a *bag-of-words* representation where the order of words in a document doesn't matter--we care only about the words and how often they occur. A word's TFIDF value is often used as a feature for document clustering or classification. The more a term helps to distinguish its enclosing document from other documents, the higher its TFIDF score. As such, words with high TFIDF scores are often very good summarizing keywords for document.
 
 As a practical matter, you will learn how to process some real XML files (Reuters articles) in Python.
 
@@ -65,7 +65,7 @@ Now that we have some raw text without all of the XML, let's properly tokenize E
 5.  Removes stop words using SciKit-Learn's `ENGLISH_STOP_WORDS` set. 
 6.  Stem the words to help normalize the text.
 
-*The easiest way to do this is to use the code I have placed in the starter kit.*
+*The easiest way to do this is to use the code I have placed in the starter kit. It also make sure that we are comparing the same words in the unit test.*
 
 Make sure to lower case everything before you try to stem the words.
 
@@ -186,7 +186,7 @@ This works great but can we do better?
 
 ### TFIDF
 
-Our "most common word" mechanism is simple and pretty effective but not as good as we can do.  We need to penalize words that are not only common in that article but common across articles. E.g., `said` and `price` probably don't help to summarize an article as they are very common words.
+Our "most common word" mechanism is simple and pretty effective but not as good as we can do.  We need to penalize words that are not only uncommon in that article but common across articles. E.g., `said` and `price` probably don't help to summarize an article as they are very common words.
 
 We need to use TFIDF on a corpus of articles from which we can compute the term frequency across articles.  Here is how we will execute our program (`summarize.py`):
 
@@ -212,7 +212,7 @@ pricipl 0.096
 eastland 0.096
 ```
 
-So, we pass in the overall corpus and then a specific file for which we want the top TFIDF scored words. The output shows max 20 words and with **three decimals of precision**. Print only those words scoring >= 0.09. In your `summarize()` function, discard any terms with scores < 0.09 so that it is consistent with my "ground truth" and then your summarize.py file main program doesn't have to filter them.
+So, we pass in the overall corpus and then a specific file for which we want the top TFIDF scored words. The output shows max 20 words and with **three decimals of precision**. Print only those words scoring >= 0.09. In your `summarize()` function, discard any terms with scores < 0.09 so that it is consistent with my "ground truth" and then your `summarize.py` file main program doesn't have to filter them.
 
 We'll use `scikit-learn` to compute TFIDF for us.  There are lots of examples on the web how to use the `TfidfVectorizer` but the parameters I use are:
 
@@ -224,7 +224,7 @@ tfidf = TfidfVectorizer(input='content',
                         analyzer='word',
                         preprocessor=gettext,
                         tokenizer=tokenizer,
-                        stop_words='english',
+                        stop_words='english', # even more stop words
                         decode_error = 'ignore')
 ```                        
 
