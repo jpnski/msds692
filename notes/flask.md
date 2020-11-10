@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "Hello MSAN692!\n"
+    return "Hello MSDS692!\n"
 
 app.run()
 ```
@@ -26,11 +26,11 @@ $ python hello.py
 
 The default flask server listens at port 5000. To contact the server, we need the address of the machine, just our local host, and the port: 127.0.0.1:5000.
 
-Now go to URL `http://127.0.0.1:5000` in your favorite browser (or click on that link if you are in PyCharm) and it should show text `Hello MSAN692!` in the browser. Or test it from the command line:
+Now go to URL `http://127.0.0.1:5000` in your favorite browser (or click on that link if you are in PyCharm) and it should show text `Hello MSDS692!` in the browser. Or test it from the command line:
 
 ```bash
 $ curl http://127.0.0.1:5000
-Hello MSAN692!
+Hello MSDS692!
 ```
 
 **Exercise**: run your [previous python "requests.get()" code](https://github.com/parrt/msds692/blob/master/notes/http.md) using this `http://127.0.0.1:5000` URL to fetch the data. Now you have a server and a client on same machine talking to each other.  Try launching the server in one terminal and use another terminal to fetch the "data".
@@ -42,7 +42,7 @@ import netifaces as ni
 ip = ni.ifaddresses('en0')[ni.AF_INET][0]['addr']
 print("I'm at IP "+ip)
 ...
-app.run('0.0.0.0')
+app.run('0.0.0.0')  # NEEDED SO ANY IP ADDRESS CAN CONNECT TO YOU
 ```
 
 Ok, so that little Web server actually spits out lots of stuff that you don't see.  Using the `-v` option, you can see the entire conversation between the client, `curl`, and the server:
@@ -64,7 +64,7 @@ $ curl -v http://127.0.0.1:5000
 < Server: Werkzeug/0.11.11 Python/2.7.12
 < Date: Sun, 17 Sep 2017 19:11:27 GMT
 < 
-Hello MSAN692!
+Hello MSDS692!
 * Closing connection 0
 ```
 
@@ -80,7 +80,7 @@ Restart your server. If you go to URL `http://127.0.0.1:5000/hello`, you should 
 
 ```bash
 $ curl http://127.0.0.1:5000/hello
-Hello MSAN692!
+Hello MSDS692!
 ```
 
 If you don't have `/hello`, you will get a "Not Found" error:
@@ -92,6 +92,8 @@ $ curl http://127.0.0.1:5000
 <h1>Not Found</h1>
 <p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>
 ```
+
+**Exercise**: Use `curl -v` with URL `http://127.0.0.1:5000/hello`. Look at the `GET` line. What does it show? What is the relationship between the URL and what is sent as part of the HTTP protocol?
 
 We can also use part of the URL as kind of a parameter. Make the following change:
 
@@ -107,6 +109,9 @@ Restart your server and visit URL `http://127.0.0.1:5000/hello/parrt` should giv
 $ curl http://127.0.0.1:5000/hello/parrt
 Hello parrt!
 ```
+
+**Exercise**: Use `curl -v` with URL `http://127.0.0.1:5000/hello`. Look at the
+ `GET` line again; how has it changed?
 
 Try it with different names after the `/hello/`:
 
@@ -177,3 +182,7 @@ def foo():
     else:
         return mydata_html
 ```
+
+**Exercise**: Create a server that responds to URL `/data` by sending back the data stored at URL `https://raw.githubusercontent.com/parrt/msds621/master/data/cars.csv`. Hint: use `requests` library to go get that data.
+
+**Exercise**:  Do the same thing except now use pandas to read the URL into a data frame and then use `to_html()` to create HTML. Send that HTML back from the response to URL `/data`.
