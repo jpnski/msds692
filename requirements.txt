@@ -1,0 +1,13 @@
+pandas
+numpy
+matplotlib
+pillow
+jupyter
+requests
+xmltodict
+untangle
+Jinja2
+spacy
+nltk
+sklearn
+beautifulsoup4
