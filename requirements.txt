@@ -4,6 +4,7 @@ matplotlib
 pillow
 jupyter
 requests
+csvkit
 xmltodict
 untangle
 Jinja2
@@ -11,3 +12,4 @@ spacy
 nltk
 sklearn
 beautifulsoup4
+vaderSentiment
