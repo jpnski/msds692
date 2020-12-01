@@ -13,3 +13,6 @@ nltk
 sklearn
 beautifulsoup4
 vaderSentiment
+tweepy
+colour
+selenium
