@@ -1,6 +1,6 @@
 # Pulling news from buzzfeed
 
-[Buzzfeed](https://www.buzzfeednews.com/) is an interesting news site that also still provides webpages as HTML we can parse easily. The difference between this and hacker news is that we are going to group links by category from the website.
+[Buzzfeed](https://www.buzzfeed.com/) is an interesting news site that also still provides webpages as HTML we can parse easily. The difference between this and hacker news is that we are going to group links by category from the website.
 
 Using Chrome's "inspect" again, we see that news link `a` tags have a number of interesting attributes:
 
@@ -31,7 +31,15 @@ for link in soup.findAll(f):
     ...
 ```
 
-**Exercise**: Write a `parseBF` function that fetches `https://www.buzzfeed.com/`, purses with beautiful soup, and then uses the `for` loop above to find all of the appropriate tags. While debugging, you can print out `link['href']` to show the link, or of course you can print the whole `link`. Next, extract to the `post_category` from the `data-bfa` attribute.  Fill and return a dictionary that maps category/topic two a set of `href` links.  Using the following main script to print out the dictionary
+If you don't like that approach, you can use the more explicit:
+
+```
+for link in soup.find_all("a"):
+    if 'data-bfa' not in link.attrs: continue
+    attr = link['data-bfa']
+```
+
+**Exercise**: Write a `parseBF` function that fetches `https://www.buzzfeed.com/`, parses with beautiful soup, and then uses the `for` loop above to find all of the appropriate tags. While debugging, you can print out `link['href']` to show the link, or of course you can print the whole `link`. Next, extract to the `post_category` from the `data-bfa` attribute.  Fill and return a dictionary that maps category/topic two a set of `href` links.  Using the following main script to print out the dictionary
 
 ```python
 topics = parseBF()

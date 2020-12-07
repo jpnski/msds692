@@ -1,19 +1,18 @@
 # API home http://www.omdbapi.com/
 
-# no key required
-
 import requests
 import json
 import sys
 
 key = sys.argv[1]
+term = sys.argv[2]
 
 URL = "http://www.omdbapi.com/?"
 
 args = {
-	's' : 'cats',
-	'r' : 'json',
-        'apikey' : key
+    's' : term,
+    'r' : 'json',
+    'apikey' : key
 }
 
 r = requests.get(URL, params=args)

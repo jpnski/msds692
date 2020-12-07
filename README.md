@@ -59,7 +59,7 @@ The following items are even more important because all of us will be remote thi
 |[Search Engine Implementation](https://github.com/parrt/msds692/blob/master/hw/search.md)| 11% | Tue, Nov 3 |
 |[TFIDF document summarization](https://github.com/parrt/msds692/blob/master/hw/tfidf.md)| 9%| Thu, Nov 12 |
 |[Recommending Articles](https://github.com/parrt/msds692/blob/master/hw/recommender.md)| 7% | Thu, Nov 19 |
-|[Tweet Sentiment Analysis](https://github.com/parrt/msds692/blob/master/hw/sentiment.md)| 9% | Tue, Dec 3 |
+|[Tweet Sentiment Analysis](https://github.com/parrt/msds692/blob/master/hw/sentiment.md)| 9% | Thu, Dec 3 |
 | [Code reviews](hw/code-review.ipynb) for 5 projects | 5% | Due 11:59PM on day associated project is due |
 |Exam 1| 27%| 2-3:30PM Tue, Nov 10 and 12:01AM-1:31AM Nov 11 |
 |Exam 2| 27%| 2-3:30PM Mon, Dec 7 and 12:01AM-1:31AM Dec 8|
@@ -152,8 +152,8 @@ With an understanding of how the Internet and web works, it's time to start pull
 * [Pull data from sites requiring an API key](notes/apikey.md)
   * Quandl stock data (Day 12)
   * OMDb movie data (Day 12)
-  * [Youtube](notes/youtube.md) (Day 13)
   * [Zillow](notes/zillow.md) (Day 13)
+  * [Youtube](notes/youtube.md) (Day 13)
 * [APIs requiring authentication/identification](notes/authapi.md) (Optional)
   * [Twitter](notes/twitter.md)  ()
   * [LinkedIn](notes/linkedin.md) ()

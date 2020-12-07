@@ -35,22 +35,34 @@ mv ~/Downloads/chromedriver /usr/local/bin
 (You might have to create `/usr/local/bin` dir.)
 <hr>
 
-I also noticed that the driver was sitting in my Anaconda directory: `/Users/parrt/anaconda3/chromedriver-Darwin` but don't use this one as it is out of date: the version numbers are different:
+If you get error, "*chromedriver cannot be opened because the developer cannot be verified. macOS cannot verify that this app is free from malware*" when you run `/usr/local/bin/chromedriver`, try:
 
 ```bash
-$ /Users/parrt/anaconda2/chromedriver-Darwin
+xattr -d com.apple.quarantine /usr/local/bin/chromedriver
+```
+
+I also noticed that the driver was sitting in my Anaconda directory: `~/opt/anaconda3/chromedriver-Darwin` but don't use this one as it is out of date: the version numbers are different:
+
+```bash
+$ ~/opt/anaconda3/chromedriver-Darwin
 Starting ChromeDriver 2.24.417412 (ac882d3ce7c0d99292439bf3405780058fcca0a6) on port 9515
 Only local connections are allowed.
+```
+
+```bash
 $ /usr/local/bin/chromedriver 
-Starting ChromeDriver 2.42.591059 (0be2cd95f834e9ee7c46bcc7cf405b483f5ae83b) on port 9515
+Starting ChromeDriver 87.0.4280.20 (c99e81631faa0b2a448e658c0dbd8311fb04ddbd-refs/branch-heads/4280@{#355}) on port 9515
 Only local connections are allowed.
+Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+[1606765857.984][WARNING]: FromSockAddr failed on netmask
+ChromeDriver was started successfully.
 ```
 
 *On mac, make sure Chrome browser is installed in the usual spot:* `/Applications/Google Chrome.app/`.
 
 ## Launching a Chrome Browser
 
-Here is the boilerplate code that launches a chrome browser to the Google search page, waits for a keypress, and then closes the browser.
+Here is the boilerplate code that launches a chrome browser to the Google search page, waits for a keypress, and then closes the browser. Call it `launch_chrome.py`.
 
 (Do *not* call your program `selenium.py` or you won't be able to import selenium.)
 
@@ -146,37 +158,41 @@ if __name__ == '__main__':
 
 In order to login to twitter, we can go directly to `https://twitter.com/login`, where we see `form` fields:
 
-<img src="figures/twitter-login.png" width="600">
+<img src="figures/twitter-login.png" width="750">
 
 The input elements are:
 
 ```html
-<input class="js-username-field email-input js-initial-focus"
- type="text"
- name="session[username_or_email]"
- autocomplete="on" value="" placeholder="Phone, email or username">
+<input autocapitalize="none" autocomplete="on" autocorrect="off"
+  name="session[username_or_email]" spellcheck="false"
+  type="text"
+  dir="auto" data-focusable="true" class="r-30o5oe
+  r-1niwhzg r-17gur6a r-1yadl64 r-deolkf r-homxoj r-poiln3
+  r-7cikom r-1ny4l3l r-1inuy60 r-utggzx r-vmopo1 r-1w50u8q
+  r-ny71av r-1dz5y72 r-fdjqy7 r-13qz1uu" value="">
 ```
 
 and
 
 ```html
-<input class="js-password-field"
- type="password" name="session[password]"
- placeholder="Password">
+<input autocapitalize="none" autocomplete="on" autocorrect="off"
+ name="session[password]" spellcheck="false" 
+ type="password"   dir="auto" data-focusable="true" class="r-30o5oe r-1niwhzg 
+ r-17gur6a r-1yadl64 r-deolkf r-homxoj r-poiln3 r-7cikom 
+ r-1ny4l3l r-1inuy60 r-utggzx r-vmopo1 r-1w50u8q r-ny71av
+ r-1dz5y72 r-fdjqy7 r-13qz1uu" value="">
 ```
 
-That is where the user should enter their username and password. We need to launch a chrome browser at that URL and then inject characters into those two fields.  I tried selecting the input fields by `name` but it didn't work so I had to use the CSS `class` attribute. [Solutions](https://github.com/parrt/msds692/tree/master/notes/code/selenium)
-
-
-**Exercise**:  Write a script to login to twitter. You need these statements to select the input fields:
+That is where the user should enter their username and password. We need to launch a chrome browser at that URL and then inject characters into those two fields.  I tried selecting the input fields by `name` but it didn't work so I had to look for the `input` tags and check their type using XPath:
 
 ```python
-userfield = driver.find_element_by_class_name("js-username-field")
-userfield.send_keys(user)
-passwordfield = driver.find_element_by_class_name("js-password-field")
+driver.find_element_by_css_selector("input[type='text']")
 ```
 
-[Solutions](https://github.com/parrt/msds692/tree/master/notes/code/selenium)
+Also, I had to put in a time delay after the page fetch to allow JavaScript time to compute and populate the login page.
+
+
+**Exercise**:  Write a script to login to twitter. [Solutions](https://github.com/parrt/msds692/tree/master/notes/code/selenium)
 
 
 **Exercise**: Next, alter the script to view the list of users followed by our Data Institute. You can get this information starting here `https://twitter.com/DataInstituteSF`. From that page, have the browser click on the `Following` link. Nothing obvious presents itself to search for using the Chrome "inspect" feature so you'll have to find all `a` tags and look for the one with `following` on the end of the `href` attribute. Find the right one and then `click()` it.
@@ -210,7 +226,9 @@ passwordfield = driver.find_element_by_class_name("js-password-field")
 The links you want to collect are of the form:
  
 ```html
-<a aria-haspopup="false" href="/willknight" role="link" data-focusable="true" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-18u37iz r-dnmrzs"><div dir="auto" class="css-901oao css-bfa6kz r-hkyrab r-1qd0xha r-1b43r93 r-vw2c0b r-ad9z0x r-bcqeeo r-3s2u2q r-qvutc0">
+<a href="/BostonJoan" role="link" data-focusable="true"
+ class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21
+ r-1wbh5a2 r-dnmrzs r-1ny4l3l">
 ...
 </a>
 ```    
@@ -230,7 +248,7 @@ Then walk through all those links and get just those with `@` in the link text.
 
 Selenium not only allows us to login and collect data, it lets us do that for pages that are generated by JavaScript. So far we've only pulled data from pages with HTML coming back from the server. In the next section, we'll pull data from Slack but it sends no HTML with data to the browser. It sends a JavaScript program (a "single-page app") that pulls data from the server to the browser behind the scenes and then generates HTML on the fly.
 
-**Exercise**: To demo that capability, save this html+javascript into a file and load in your browser. You'll "USF MSAN" in the browser.
+**Exercise**: To demo that capability, save this html+javascript into a file called `/tmp/gendom.html` and load it in your browser. You'll see "USF MSDS" in the browser.
 
 ```html
 <html>
@@ -238,7 +256,7 @@ Selenium not only allows us to login and collect data, it lets us do that for pa
     <script LANGUAGE="JavaScript" type="text/javascript">
     window.onload=function() { // run after page loads
         var p = document.getElementById("stuff");
-        var add_news = document.createTextNode("USF MSAN");
+        var add_news = document.createTextNode("USF MSDS");
         p.appendChild(add_news);
     }
     </script>
@@ -249,6 +267,10 @@ Selenium not only allows us to login and collect data, it lets us do that for pa
 </body>
 </html>
 ```
+
+If you look at the source code for the page, you will see that it is exactly what you see above. There is no raw HTML. We have to use selenium to get that JavaScript to execute.
+
+**Exercise**:  Launch selenium on URL `file:///tmp/gendom.html` and extract/print the text from the `p` tag generated by the JavaScript. You can use `driver.find_element_by_id('stuff')` to find the `p` tag.
 
 ## Pull messages from slack w/o API
 
@@ -279,37 +301,28 @@ Once logged in, the message list URL for `general` is:
 
 The "inspect element" feature of the browser shows messages themselves to look like:
 
-```html
-<span class="c-message__body">blah blah</span>
-```
+<img src="figures/slack.png" width="750">
 
-But we need to associate these with a user.  To do that we notice that such `span`s are nested within an outer wrapper that also helps us identify the user:
+But we need to associate these with a user.  To do that we notice that messages are nested within an outer wrapper that also helps us identify the user:
 
 ```html
-<div class="c-message__content"
-     data-qa="message_content">
+<div class="c-message_kit__message ..." ...>
    ...
 ```
 
 Under that you'll find the sender like this:
 
 ```html
-<span class="c-message__sender"
-      data-qa="message_sender">
-      <a class="c-message__sender_link"
-               href="/team/UBL5G4TT6" target="_blank"
-               rel="noopener noreferrer"
-               data-stringify-suffix=" "
-               data-message-sender="UBL5G4TT6"
-               data-qa="message_sender_name">
-          Nicole Kacirek
+<span class="c-message__sender ..." ...>
+     <a ... href="/team/UBL5G4TT6" target="_blank" ...>
+          Person's name
       </a>
 </span>
 ```
 
 We can easily search for class `c-message__sender`.
 
-The links returned by selenium for the user look like `/team/UBL5G4TT6`.
+The links returned by selenium for the user look like `/team/foo`.
 
 **Exercise**: To get started, write a script to login to slack and jump to a specific channel like `general`. My outline looks like:
 
@@ -340,7 +353,7 @@ driver.quit() # close browser
 
 [Solutions](https://github.com/parrt/msds692/tree/master/notes/code/selenium)
 
-**Exercise**: Write a program to login to slack's website (not the API) using selenium and get messages from a channel with messages, such as our MSAN `general` channel.  Create a function `parse_slack` that returns list of tuples with (user,message) and then have your main code print the stuff out:
+**Exercise**: Write a program to login to slack's website (not the API) using selenium and get messages from a channel with messages, such as our MSDS `general` channel.  Create a function `parse_slack` that returns list of tuples with (user,message) and then have your main code print the stuff out:
 
 ```python
 from login import login

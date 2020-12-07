@@ -26,7 +26,7 @@ Now, let's look at a website that will give us JSON data: [www.openpayments.us](
 There is a REST data API available at URL template:
 
 ```
-URL = "http://openpayments.us/data?query=%s"
+URL = f"http://openpayments.us/data?query={q}" # for some q
 ```
 **Exercise**: Use `curl` to fetch data about a doctor.
 
@@ -43,20 +43,20 @@ import requests
 import json
 import sys
 
-URL = "http://openpayments.us/data?query=%s"
 name = sys.argv[1]
+URL = f"http://openpayments.us/data?query={name}"
 
-r = requests.get(URL % name)
+r = requests.get(URL)
 data = json.loads(r.text)
 
 print(json.dumps(data))
 ```
 
-A **technical detail** related to valid strings you can include as part of a URL.  Spaces are not allowed so `John Chan` has to be encoded or "quoted".  Fortunately, `requests` does this automatically for us. If you ever need to quote URLs, you can do this:
+A **technical detail** related to valid strings you can include as part of a URL.  Spaces are not allowed so `John Chan` has to be encoded or "quoted".  Fortunately, `requests` does this automatically for us. If you ever need to quote parameter values in URLs, you can do this:
 
 ```python
-from requests.utils import quote
-query = quote(query)
+from urllib.parse import quote
+value = quote(value)
 ```
 
 Because `&` is the separator between parameters, it is also invalid in a parameter name or value. Here are some example conversions:
